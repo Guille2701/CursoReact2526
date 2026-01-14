@@ -1,66 +1,90 @@
 import React, { useState } from 'react'
+import Boton from '../Boton'
 
 
-interface Usuario {
+interface Credenciales {
     email:string,
     password:string
-    check:boolean
 }
 
 const Login = () => {
+  // hooks
+    const [credenciales, setCredenciales] = useState<Credenciales>({email:"", password:""})
+    const [errores, setErrores] = useState({email:"",password:""})
+    const [showPassword, setShowPassword] = useState(false)
 
-    const [usuario, setUsuario] = useState<Usuario>({email:"", password:"",check:false})
-    //const [showPass, setShowPass] = useState<boolean>(false)
+    //efectos
 
-    const handleSubmit = (e:React.FormEvent)=>{
-        e.preventDefault();
-        
-        if (usuario.email === "" || usuario.password === "") {
-            alert("Los campos no pueden estar vacíos");
-            return;
-        }
-
-        if (!filtroEmail.test(usuario.email)) {
-            alert("Email no válido");
-            return;
-        }
-
-        if (!filtroPass.test(usuario.password)) {
-            alert("La contraseña debe tener más de 6 caracteres");
-            return;
-        }
-        alert("Login successful");
+    //funciones
+    function handleSubmit(e:React.FormEvent){
+      e.preventDefault();
+      if(validarFormulario()){
+        console.log(errores)
+      }
     }
 
-    const actualizarCampo = (campo:keyof Usuario, valor:string|boolean)=>{
-        setUsuario({
-            ...usuario,
-            [campo]: valor
-        })
+    const emailValido = (email:string):boolean=>{
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
     }
 
-    const filtroEmail: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const filtroPass:RegExp = /^.{7,}$/;
+
+    const validarFormulario = ():boolean=>{
+      const posiblesErrores:Credenciales = {email:"", password:""}
+      if(!credenciales.email.trim()){
+        posiblesErrores.email ="Error, falta el email"
+      }else if(!emailValido(credenciales.email)){
+        posiblesErrores.email ="Error, el email no es valido"
+      }
+      if(!credenciales.password.trim()){
+        posiblesErrores.password ="Error, falta la contraseña"
+      }else if((credenciales.password.length<6)){
+        posiblesErrores.password ="Error, la contraseña no es valida"
+      }
+      setErrores(posiblesErrores)
+      return Object.values(posiblesErrores).length===0
+    }
 
   return (
-    <div>
+    <div className='max-w-md mx-auto p-6 bg-amber-100 rounded-lg shadow'>
+      <h2 className='text-2xl font-bold mb-6 text-center'>
+        Iniciar sesion
+      </h2>
       <form onSubmit={handleSubmit} className='space-y-4'>
         <div>
-          <label className='block text-sm font-medium mb-2'>Email</label>
-          <input className='w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:ring-blue-500' type="text" value={usuario.email} 
-          onChange={(e)=>{actualizarCampo("email",e.target.value)}}/>
+          <label className='bolck text-sm font-medium mb-1'>Email:</label>
+          <input 
+          type='email'
+          className='w-full px-3 py-2 rounded focus:outline-none focus:ring-4'
+          placeholder='tu@email.com'
+          value={credenciales.email}
+          onChange={(e)=>setCredenciales({...credenciales,email:e.target.value})}
+          />
         </div>
         <div>
-          <label className='block text-sm font-medium mb-2'>Contraseña</label>
-          <input className='w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:ring-blue-500' type={usuario.check?"text":"password"} value={usuario.password} 
-          onChange={(e)=>{actualizarCampo("password",e.target.value)}}/>
-          <label className='block text-sm font-medium mb-2'>Mostrar Contraseña</label>  
-          <input type='checkbox' checked={usuario.check} onChange={(e)=>{actualizarCampo("check",e.target.checked)}} />
+          <label className='bolck text-sm font-medium mb-1'>Password::</label>
+          <input 
+          type={showPassword ? "text" : "password"}
+          className='w-full px-3 py-2 rounded focus:outline-none focus:ring-4'
+          placeholder='Introduzca la contraseña'
+          value={credenciales.password}
+          onChange={(e)=>setCredenciales({...credenciales,password:e.target.value})}
+          />
         </div>
-        <button type='submit' className='w-full py-2 bg-green-500 text-white rounded hover:bg-green-700 font-semibold'> Guardar Contacto</button>
+        <button 
+        type='button'
+        onClick={()=>setShowPassword(!showPassword)}
+        >{showPassword?"🙉":"🙈"}</button>
+        <div>
+          <Boton
+          tipo='primary' 
+          onClick={()=>handleSubmit}
+          texto='enviar'
+          submit={true}/>
+        </div>
+        <label>{errores.email}</label><br />
+        <label>{errores.password}</label>
       </form>
-
-    
     </div>
   )
 }
