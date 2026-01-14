@@ -3,6 +3,8 @@ import Header from './components/Header'
 import Saludo from './components/Saludo'
 import Tarjeta from './components/Tarjeta'
 import FormularioUsuarios from './components/FormularioUsuarios'
+import Contactos from './components/ejercicios/Contactos'
+import Login from './components/ejercicios/Login'
 
 const App = () => {
   return (
@@ -21,7 +23,11 @@ const App = () => {
           <Tarjeta title="React 19" description="Ultima version de la libreria React para JavaScript" favourite={true}/>
         </div>
         <FormularioUsuarios />
+        <br />
+        <Contactos />
         
+        <br />
+        <Login />
       </main>
     </div>
     
