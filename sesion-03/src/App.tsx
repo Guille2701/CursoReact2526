@@ -1,8 +1,9 @@
-import React, { Suspense, useState } from 'react'
+import { Suspense, useState } from 'react'
 import PlatosList from './components/PlatosList'
 import Header from './components/Header'
 import LoadingFallBack from './components/LoadingFallBack'
 import { fetchPlatos } from './utils/api'
+import Buscar from './components/Buscar'
 
 const App = () => {
   // hooks
@@ -16,6 +17,7 @@ const App = () => {
       <Header />
 
       <main>
+        <Buscar />
         <Suspense fallback={<LoadingFallBack message="Let him cook 🍽"/>}>
           <PlatosList platosPromise={platosPromise}/>
         </Suspense>

@@ -28,6 +28,7 @@ export function useFetch<T>(url:string){
                     throw new Error("Error en la peticion")
                 }
                 const result = await response.json()
+                setError(null)
                 setData(result)
                 setLoading(false)
             } catch (error:unknown) {
